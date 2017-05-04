@@ -1,0 +1,112 @@
+#!/bin/ruby
+
+@brackets = {
+  "(" => ")",
+  "{" => "}",
+  "[" => "]"
+}
+
+@brackets_new = {
+  "(".ord => ")".ord,
+  "{".ord => "}".ord,
+  "[".ord => "]".ord
+}
+
+def balanced? str
+  return false unless str.is_a? String
+  opened = []
+  str.each_byte do |c|
+    if @brackets.keys.include? c.chr
+      opened << @brackets[c.chr]
+    elsif opened.last == c.chr
+      opened.pop
+    elsif @brackets.values.include? c.chr
+      return false
+    end
+  end
+  return true
+end
+
+def balanced_two? str
+  return false unless str.is_a? String
+  str.gsub! /\w*/, ""
+  prev = str.size
+  until str.size == 0 do
+    str.gsub! /(\(\)|\[\]|\{\})/, ""
+    return false if prev == str.size
+    prev = str.size
+  end
+  return true
+end
+
+def balanced_three? str
+  return false unless str.is_a? String
+  str.gsub! /\w*/, ""
+  opened = []
+  str.each_byte do |c|
+    if @brackets.keys.include? c.chr
+      opened << @brackets[c.chr]
+    elsif opened.last == c.chr
+      opened.pop
+    elsif @brackets.values.include? c.chr
+      return false
+    end
+  end
+  return true
+end
+
+def balanced_four? str
+  return false unless str.is_a? String
+  str.gsub! /\w*/, ""
+  opened = []
+  str.each_byte do |c|
+    if @brackets_new.keys.include? c
+      opened << @brackets_new[c]
+    elsif opened.last == c
+      opened.pop
+    elsif @brackets_new.values.include? c
+      return false
+    end
+  end
+  return true
+end
+
+require 'benchmark'
+
+Benchmark.bm do |x|
+  x.report {
+    5000.times do
+      balanced_four?("({})")
+      balanced_four?("({asdfasfsdfasfas})")
+      balanced_four?("{{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}")
+      balanced_four?("({((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))})")
+    end
+  }
+
+  x.report {
+    5000.times do
+      balanced_two?("({)}")
+      balanced_two?("({asdfasfsdfasfas})")
+      balanced_two?("{{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}")
+      balanced_two?("({((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))})")
+    end
+  }
+
+  x.report {
+    5000.times do
+      balanced_three?("({})")
+      balanced_three?("({asdfasfsdfasfas})")
+      balanced_three?("{{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}")
+      balanced_three?("({((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))})")
+    end
+  }
+
+  x.report {
+    5000.times do
+      balanced?("({})")
+      balanced?("({asdfasfsdfasfas})")
+      balanced?("{{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}{([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}([(asdfasd{asdfasfsdfasfas}asdfaa)asdfadfa])}")
+      balanced?("({((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))})")
+    end
+  }
+end
