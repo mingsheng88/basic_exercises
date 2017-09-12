@@ -1,5 +1,14 @@
 #!/bin/ruby
-#
+
+def fib0 n
+  return 0 if n <= 1
+  return 1 if n == 2
+  (0..n).reduce([0,1]) do |arr, i|
+    arr << (arr[-1] + arr[-2]) if i > 2
+    arr
+  end.last
+end
+
 #==================================================================
 
 def fib n, mem=[]
